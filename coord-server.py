@@ -13,13 +13,13 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
     def do_HEAD(self):
         self.send_response(200)
-        self.send_header("Content-type", "text/html")
+        self.send_header("Content-type", "application/json")
         self.end_headers()
 
     def do_GET(self):
         """Respond to a GET request."""
         self.send_response(200)
-        self.send_header("Content-type", "text/html")
+        self.send_header("Content-type", "application/json")
         self.end_headers()
         # self.wfile.write('Webcam alive?: {}'.format(self.webcam_feed.isAlive()))
         x, y = self.webcam_feed.get_rel_coords()
