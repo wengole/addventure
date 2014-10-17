@@ -1,8 +1,6 @@
+import json
 import time
 import BaseHTTPServer
-from random import randint
-
-
 from webcam import WebcamFeed
 
 HOST_NAME = 'localhost'  # !!!REMEMBER TO CHANGE THIS!!!
@@ -12,12 +10,6 @@ PORT_NUMBER = 8080  # Maybe set this to 9000.
 class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
     webcam_feed = None
-
-    def _process_request(self):
-        s.send_response(200)
-        s.send_header("Content-type", "text/html")
-        s.end_headers()
-
 
     def do_HEAD(self):
         self.send_response(200)
@@ -29,15 +21,17 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
-        self.wfile.write('Webcam alive?: {}'.format(self.webcam_feed.isAlive()))
-        self.wfile.write('x={wc.xOut}, y={wc.yOut}'.format(wc=self.webcam_feed))
-
+        # self.wfile.write('Webcam alive?: {}'.format(self.webcam_feed.isAlive()))
+        x, y = self.webcam_feed.get_rel_coords()
+        self.wfile.write(json.dumps({'x': x,'y':y}))
 
 if __name__ == '__main__':
     server_class = BaseHTTPServer.HTTPServer
     webcam_feed = WebcamFeed()
     webcam_feed.start()
     MyHandler.webcam_feed = webcam_feed
+    MyHandler.curX = 0
+    MyHandler.curY = 0
     httpd = server_class((HOST_NAME, PORT_NUMBER), MyHandler)
     print time.asctime(), "Server Starts - %s:%s" % (HOST_NAME, PORT_NUMBER)
     try:

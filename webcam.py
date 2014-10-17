@@ -1,3 +1,4 @@
+from collections import defaultdict
 import shelve
 import threading
 
@@ -30,6 +31,19 @@ class WebcamFeed(threading.Thread):
         self.openingFilter = np.ones((3, 3), np.uint8)
         self.xOut = 0
         self.yOut = 0
+        self.lock = threading.Lock()
+        self.state = defaultdict(int)
+
+    def get_coords(self):
+        with self.lock:
+            x, y = self.xOut, self.yOut
+        return (x, y)
+
+    def get_rel_coords(self):
+        x, y = self.get_coords()
+        x -= self.state['x']
+        y -= self.state['y']
+        return (x, y)
 
     def run(self):
         while True:
@@ -60,11 +74,15 @@ class WebcamFeed(threading.Thread):
                     moment = cv2.moments(biggestContour)
                     cx, cy = int(moment['m10'] / moment['m00']), int(
                     moment['m01'] / moment['m00'])
+                    self.state['x'] = self.xOut
+                    self.state['y'] = self.yOut
                     self.xOut = cx
                     self.yOut = cy
+                #cv2.imshow('boo', self.frame)
             self.rval, self.frame = self.feed.read()
 
     def join(self, *args, **kw):
+        cv2.destroyAllWindows()
         self.feed.release()
         threading.Thread.join(self, *args, **kw)
 
