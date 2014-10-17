@@ -29,7 +29,7 @@ class WebcamFeed(threading.Thread):
         self.rval, self.frame = self.feed.read()
         self.openingFilter = np.ones((3, 3), np.uint8)
         self.xOut = 0
-        self.yOut= 0
+        self.yOut = 0
 
     def run(self):
         while True:
