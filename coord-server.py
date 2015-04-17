@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import json
 import time
 import BaseHTTPServer
@@ -26,6 +27,7 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         self.wfile.write(json.dumps({'x': x,'y':y}))
 
 if __name__ == '__main__':
+    print("HELLO!")
     server_class = BaseHTTPServer.HTTPServer
     webcam_feed = WebcamFeed()
     webcam_feed.start()

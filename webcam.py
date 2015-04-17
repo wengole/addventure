@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from collections import defaultdict
 import shelve
 import threading
@@ -78,7 +79,7 @@ class WebcamFeed(threading.Thread):
                     self.state['y'] = self.yOut
                     self.xOut = cx
                     self.yOut = cy
-                #cv2.imshow('boo', self.frame)
+#                cv2.imshow('boo', masked_image)
             self.rval, self.frame = self.feed.read()
 
     def join(self, *args, **kw):
